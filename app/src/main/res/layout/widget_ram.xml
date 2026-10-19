@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_bg"
+    android:padding="12dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/widgetRamPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_text"
+        android:textColor="@color/text_primary_dark"
+        android:textStyle="bold"
+        android:textSize="22sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/widget_ram_used_u00b7_tap_to"
+        android:textColor="@color/text_secondary_dark"
+        android:textSize="9sp"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/widgetBtnCloseAll"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:text="@string/widget_close_all"
+        android:textSize="11sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/widget_button_bg"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"/>
+
+</LinearLayout>

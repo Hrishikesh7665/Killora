@@ -1,0 +1,207 @@
+<resources>
+    <string name="app_name">Killora</string>
+    <string name="app_tagline">One tap. Zero bloat.</string>
+    <string name="accessibility_service_description">Only active while you are closing apps in Killora, and only inside Settings. Automatic mode lets Killora find and tap the real "Force stop" button for an app that\'s still holding something open after the normal close. Manual mode only opens the screen for you and never taps or scrolls anything.</string>
+
+    <!-- Closing run: overlay, notification and progress -->
+    <string name="closing_title">Closing apps…</string>
+    <string name="closing_starting">Starting…</string>
+    <string name="closing_percent">%1$d%%</string>
+    <string name="closing_progress_count">%1$d of %2$d</string>
+    <string name="closing_current_app">%1$s (%2$s)</string>
+    <string name="closing_hint_wait">Please wait — do not close Settings</string>
+    <string name="manual_next">Next: %1$s (%2$d of %3$d)</string>
+    <string name="manual_stop">Stop</string>
+    <string name="manual_toast">Tap Force stop for %1$s, confirm, then press Back</string>
+    <string name="manual_stopped">Stopped. Nothing more will be opened.</string>
+    <string name="manual_done_all">All done, every app is stopped</string>
+    <string name="manual_done_partial">Still running: %1$s</string>
+    <string name="closing_hint_manual">Tap Force stop below, then go back — the next app opens automatically</string>
+    <string name="closing_hint_finishing">Finishing…</string>
+    <string name="closing_action_pause_cd">Pause</string>
+    <string name="closing_action_resume_cd">Resume</string>
+    <string name="closing_action_show">Show</string>
+    <plurals name="closing_done_all">
+        <item quantity="one">All done — closed %d app</item>
+        <item quantity="other">All done — closed %d apps</item>
+    </plurals>
+    <string name="closing_done_partial">Done — couldn\'t auto-close %s</string>
+    <string name="closing_overlay_unavailable_title">Can\'t show closing overlay</string>
+    <string name="closing_overlay_unavailable_text">Tap to re-enable Killora\'s Accessibility Service</string>
+    <string name="channel_closing_name">Closing apps</string>
+
+    <!-- Messages and results -->
+    <string name="notice_dismiss">Dismiss</string>
+    <string name="channel_results_name">Close results</string>
+    <string name="channel_results_description">Quiet summary after closing apps from a shortcut or widget</string>
+    <string name="close_nothing_to_close">Nothing to close</string>
+    <plurals name="close_summary_closed">
+        <item quantity="one">Closed %d app</item>
+        <item quantity="other">Closed %d apps</item>
+    </plurals>
+    <plurals name="close_summary_already_stopped">
+        <item quantity="one">%d already stopped</item>
+        <item quantity="other">%d already stopped</item>
+    </plurals>
+    <string name="close_summary_failed">couldn\'t close: %s</string>
+    <string name="close_summary_separator"> · </string>
+    <string name="closing_aborted">Closing stopped because the Accessibility Service was turned off</string>
+    <string name="quick_close_empty">Your Quick List is empty. Open Killora to add apps.</string>
+    <string name="quick_close_deep_not_ready">Deep force stop needs one more step. Open Killora › Settings to finish enabling it.</string>
+    <string name="root_granted">Root access granted</string>
+    <string name="root_not_granted">Root access still not granted</string>
+
+    <!-- Quick List -->
+    <string name="quick_add_selected">Add to Quick List</string>
+    <string name="quick_add_apps">Add apps</string>
+    <string name="quick_clear_all">Clear all</string>
+    <string name="quick_close_selected">Close selected apps</string>
+    <string name="quick_select_all">Select all</string>
+    <string name="quick_unselect_all">Unselect all</string>
+    <string name="quick_close_select_first">Tick a few apps above first, then close them</string>
+    <string name="quick_description">Apps you close in one tap. They stay saved until you remove them.</string>
+    <string name="quick_empty">Your Quick List is empty.\nTap \"Add apps\" to choose apps to close in one tap.</string>
+    <string name="quick_badge_description">In Quick List</string>
+    <string name="quick_search_hint">Search apps</string>
+    <string name="quick_pick_no_results">No matching apps</string>
+    <string name="quick_list_search_cd">Search Quick List</string>
+    <string name="quick_list_search_hint">Search name or package</string>
+    <string name="quick_list_search_no_results">No apps match your search</string>
+    <string name="quick_show_stopped">Show apps that aren\'t running</string>
+    <string name="quick_show_stopped_description">Off hides Quick List apps that are currently stopped, so you only see the ones actually running right now.</string>
+    <string name="quick_add_title">Add to Quick List</string>
+    <string name="quick_add_confirm">Add</string>
+    <string name="quick_add_confirm_count">Add (%d)</string>
+    <string name="quick_add_none_available">Every app in your list is already in the Quick List</string>
+    <string name="quick_add_still_loading">Still scanning your apps, try again in a moment</string>
+    <string name="quick_select_first">Tick a few apps first, then add them</string>
+    <string name="quick_view">View</string>
+    <string name="quick_undo">Undo</string>
+    <string name="quick_not_installed">Not installed</string>
+    <string name="quick_already_all">Already in your Quick List</string>
+    <plurals name="quick_added">
+        <item quantity="one">Added %d app to your Quick List</item>
+        <item quantity="other">Added %d apps to your Quick List</item>
+    </plurals>
+    <string name="quick_added_some">Added %1$d · %2$d already in your Quick List</string>
+    <string name="quick_removed">Removed %s from your Quick List</string>
+    <string name="quick_cleared">Quick List cleared</string>
+    <string name="quick_clear_title">Clear Quick List?</string>
+    <string name="quick_clear_message">This removes every app from your Quick List. You can undo it right after.</string>
+    <string name="quick_clear_confirm">Clear</string>
+    <string name="quick_cancel">Cancel</string>
+    <plurals name="quick_saved_count">
+        <item quantity="one">%d saved</item>
+        <item quantity="other">%d saved</item>
+    </plurals>
+
+    <!-- App list rows -->
+    <string name="app_package_version">%1$s • v%2$s</string>
+    <string name="app_status_running">● Running</string>
+    <string name="app_status_not_running">○ Not running</string>
+    <string name="app_badge_essential">Essential, risky to close</string>
+    <string name="app_badge_system">System</string>
+
+    <string name="settings_pin_needs_quick_list">Add apps to your Quick List first, then pin the shortcut</string>
+
+    <!-- Main screen -->
+    <string name="percent_format">%1$d%%</string>
+    <string name="ram_free_gb">%1$.2f GB free</string>
+    <plurals name="apps_running">
+        <item quantity="one">%d app running</item>
+        <item quantity="other">%d apps running</item>
+    </plurals>
+    <string name="app_list_header">All apps (%1$d running / %2$d)</string>
+    <string name="main_search_cd">Search apps</string>
+    <string name="main_search_hint">Search name or package</string>
+    <string name="main_search_no_results">No apps match your search</string>
+    <string name="close_select_first">Tap a few apps below first, then close them</string>
+    <string name="open_app_info_failed">Couldn\'t open settings for this app</string>
+    <plurals name="essential_hidden_banner">
+        <item quantity="one">%d essential system app hidden, tap to review</item>
+        <item quantity="other">%d essential system apps hidden, tap to review</item>
+    </plurals>
+    <string name="essential_dialog_title">Show essential system apps?</string>
+    <string name="essential_dialog_message">These are core Android processes, such as System UI, telephony, your keyboard, Play services and the launcher. Force-stopping one can freeze the UI, break notifications or calls, or require a restart.\n\nOnly continue if you understand the risk and really want to close one of these yourself.</string>
+    <string name="essential_dialog_confirm">I understand, show them</string>
+    <string name="banner_root_denied">Root permission denied. Killora can\'t use root-level force stop until access is granted in your root manager app. Tap to retry.</string>
+    <string name="banner_accessibility_missing">Deep force stop needs the Accessibility Service, which isn\'t enabled yet. Tap to open Settings.</string>
+
+    <!-- Battery / background reliability -->
+    <string name="battery_dialog_title">One more step for %s</string>
+    <string name="battery_dialog_message">%s manages background apps more aggressively than stock Android. It can silently stop Killora\'s automation part-way through.\n\nAllowing Killora to ignore battery optimization keeps the automation reliable. If your phone has an Autostart option, enable it for Killora too.\n\nYou can change this later in Killora › Settings.</string>
+    <string name="battery_dialog_allow">Allow</string>
+    <string name="battery_dialog_skip">Skip</string>
+
+    <!-- Accessibility: prominent disclosure shown before sending the user to system settings -->
+    <string name="a11y_disclosure_title">Allow Accessibility access?</string>
+    <string name="a11y_disclosure_message">Your apps were already closed the normal way. Deep force stop goes one step further for apps that are still holding something open.\n\nTo do that, Killora uses Android\'s Accessibility Service to open each app\'s App info screen in Settings and tap the real Force stop button for you.\n\n• It only acts while you are closing apps, and only inside Settings.\n• It does not read or collect anything else on your screen.\n• Nothing leaves your device.\n\nYou can turn it off at any time in Android Settings › Accessibility. On the next screen, find Killora and switch it on.</string>
+    <string name="a11y_disclosure_agree">Agree and continue</string>
+    <string name="a11y_disclosure_decline">Not now</string>
+
+    <!-- Settings -->
+    <string name="status_checking">Checking…</string>
+    <string name="status_root_granted">Root access: granted. Closing apps uses the faster root path.</string>
+    <string name="status_root_denied">Root access: denied. A root manager is installed but hasn\'t granted Killora access, so closing falls back to the normal method.</string>
+    <string name="status_root_not_granted">Root access: not granted.</string>
+    <string name="status_root_unavailable">Root access: not available on this device. Closing uses Android\'s normal, non-root method.</string>
+    <string name="status_a11y_enabled">Deep force stop service: enabled</string>
+    <string name="status_a11y_disabled">Deep force stop service: not enabled</string>
+    <string name="settings_background_body">%s manages background apps more aggressively than stock Android, which can interrupt deep force stop part-way through. Allow Killora to ignore battery optimization, and enable Autostart for it, so the automation keeps running.</string>
+    <string name="settings_autostart_not_found">Couldn\'t find the Autostart screen for %s automatically. Look for \"Autostart\" or \"Startup manager\" in your phone\'s own Settings app.</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system_default">Follow system (default)</string>
+    <string name="theme_system_description">Follow system (uses AMOLED at night, Light by day)</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_amoled">AMOLED</string>
+    <string name="settings_pin_unsupported">Your launcher doesn\'t support pinning shortcuts</string>
+    <string name="settings_widget_manual">Long-press your home screen, open Widgets, and add Killora manually</string>
+    <string name="shortcut_short_label">Quick Close</string>
+    <string name="shortcut_long_label">Close saved apps</string>
+
+    <!-- Layout text (extracted from the XML layouts) -->
+    <string name="main_settings_cd">Settings</string>
+    <string name="main_all_apps">All apps</string>
+    <string name="main_quick_list">Quick List</string>
+    <string name="main_0">0%</string>
+    <string name="main_0_gb_free">0 GB free</string>
+    <string name="main_0_apps_running">0 apps running</string>
+    <string name="main_refresh_app_list_cd">Refresh app list</string>
+    <string name="main_preparing_your_apps">Preparing app list…</string>
+    <string name="main_scanning_installed_apps_and_checking">Scanning installed apps and checking what\'s running</string>
+    <string name="main_close_selected">Close selected</string>
+    <string name="settings_back_cd">Back</string>
+    <string name="settings_root_permission_status">Root &amp; permission status</string>
+    <string name="settings_grant_root_access">Grant root access</string>
+    <string name="settings_app_list_display">App list display</string>
+    <string name="settings_show_system_apps">Show system apps</string>
+    <string name="settings_off_by_default_to_keep">Off by default to keep the list to apps you actually use</string>
+    <string name="settings_show_essential_system_apps">Show essential system apps</string>
+    <string name="settings_core_android_processes_system_ui">Core Android processes (System UI, telephony, keyboard, Play services, launcher). Force-stopping one can freeze the UI or require a restart.</string>
+    <string name="settings_follow_system">Follow system</string>
+    <string name="settings_u203a">\u203A</string>
+    <string name="settings_home_screen_shortcut">Home screen shortcut</string>
+    <string name="settings_pins_a_onetap_icon_that">Pins a one-tap icon that closes your Quick List instantly, without opening the app.</string>
+    <string name="settings_pin_quickclose_shortcut">Pin Quick-Close shortcut</string>
+    <string name="settings_home_screen_widget">Home screen widget</string>
+    <string name="settings_a_resizable_widget_showing_live">A resizable widget showing live RAM usage with a Close All button for your Quick List.</string>
+    <string name="settings_add_widget_to_home_screen">Add widget to home screen</string>
+    <string name="settings_how_closing_works">How closing works</string>
+    <string name="settings_by_default_close_selected_asks">By default, \"Close selected\" asks Android\'s own ActivityManager API to kill each app\'s background process - no permissions, no Settings screens, the same call on every phone brand. It only affects apps already idling in the background, which is what Android allows any app to do.</string>
+    <string name="settings_manual_mode">Manual mode</string>
+    <string name="settings_manual_mode_description">Killora opens each app\'s Settings page for you instead of tapping Force stop itself. Tap it yourself, go back, and the next app opens automatically. Nothing is tapped or scrolled on your behalf, and Accessibility is not needed.</string>
+    <string name="settings_show_fullscreen_progress_overlay">Show progress overlay</string>
+    <string name="settings_overlay_description">A full-screen progress screen in automatic mode. Manual mode doesn\'t use it and shows on-screen messages instead. You can also hide it mid-run and bring it back from the notification.</string>
+    <string name="settings_run_reliably_in_the_background">Run reliably in the background</string>
+    <string name="settings_your_phones_skin_manages_background">Your phone\'s skin manages background apps more aggressively than stock Android, which can interrupt deep force stop mid-way through. Allow Killora to ignore battery optimization and enable Autostart for it.</string>
+    <string name="settings_allow_background_use">Allow background use</string>
+    <string name="settings_open_autostart_settings">Open Autostart settings</string>
+    <string name="app_item_open_app_settings_cd">Open app settings</string>
+    <string name="quick_item_remove_from_quick_list_cd">Remove from Quick List</string>
+    <string name="closing_hide">Hide</string>
+    <string name="closing_stop">Stop</string>
+    <string name="widget_text">--%</string>
+    <string name="widget_ram_used_u00b7_tap_to">RAM used \u00b7 tap to refresh</string>
+    <string name="widget_close_all">CLOSE ALL</string>
+</resources>

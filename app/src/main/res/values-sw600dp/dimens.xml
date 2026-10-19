@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tablets and foldables unfolded (smallest width >= 600dp). More breathing room and a
+     bigger gauge so the UI doesn't look like a stretched-out phone layout. -->
+<resources>
+    <dimen name="screen_padding">36dp</dimen>
+    <dimen name="card_padding">22dp</dimen>
+    <dimen name="card_spacing">18dp</dimen>
+    <dimen name="ram_gauge_size">132dp</dimen>
+    <dimen name="header_title_size">27sp</dimen>
+    <dimen name="body_text_size">15sp</dimen>
+</resources>

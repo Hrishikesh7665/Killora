@@ -1,0 +1,7 @@
+<resources>
+    <attr name="appBg" format="color"/>
+    <attr name="cardBg" format="color"/>
+    <attr name="textPrimary" format="color"/>
+    <attr name="textSecondary" format="color"/>
+    <attr name="gaugeTrack" format="color"/>
+</resources>

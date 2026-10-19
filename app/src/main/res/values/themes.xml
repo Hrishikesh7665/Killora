@@ -1,0 +1,40 @@
+<resources>
+    <style name="Theme.Killora.Dark" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorAccent">@color/accent_blue</item>
+        <item name="android:statusBarColor">@color/bg_dark</item>
+        <item name="appBg">@color/bg_dark</item>
+        <item name="cardBg">@color/card_dark</item>
+        <item name="textPrimary">@color/text_primary_dark</item>
+        <item name="textSecondary">@color/text_secondary_dark</item>
+        <item name="gaugeTrack">@color/gauge_track_dark</item>
+    </style>
+
+    <style name="Theme.Killora.Amoled" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@color/bg_amoled</item>
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorAccent">@color/accent_blue</item>
+        <item name="android:statusBarColor">@color/bg_amoled</item>
+        <item name="appBg">@color/bg_amoled</item>
+        <item name="cardBg">@color/card_amoled</item>
+        <item name="textPrimary">@color/text_primary_amoled</item>
+        <item name="textSecondary">@color/text_secondary_amoled</item>
+        <item name="gaugeTrack">@color/gauge_track_amoled</item>
+    </style>
+
+    <style name="Theme.Killora.Light" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowBackground">@color/bg_light</item>
+        <item name="colorPrimary">@color/accent_blue</item>
+        <item name="colorAccent">@color/accent_blue</item>
+        <item name="android:statusBarColor">@color/bg_light</item>
+        <item name="appBg">@color/bg_light</item>
+        <item name="cardBg">@color/card_light</item>
+        <item name="textPrimary">@color/text_primary_light</item>
+        <item name="textSecondary">@color/text_secondary_light</item>
+        <item name="gaugeTrack">@color/gauge_track_light</item>
+    </style>
+
+    <!-- Fallback used only briefly by the manifest before code applies the real theme. -->
+    <style name="Theme.Killora" parent="Theme.Killora.Dark" />
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Background tint for the "All apps" / "Quick List" segmented tabs: solid accent fill
+     when the tab is the active/checked one, transparent (so the track card shows through)
+     otherwise - a much clearer active/inactive distinction than the default outline style. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/accent_blue" android:state_checked="true"/>
+    <item android:color="@android:color/transparent" android:state_checked="false"/>
+</selector>

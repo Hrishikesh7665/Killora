@@ -1,0 +1,44 @@
+<resources>
+    <!-- Dark -->
+    <color name="bg_dark">#0B1222</color>
+    <color name="card_dark">#121B33</color>
+    <color name="text_primary_dark">#E8ECF7</color>
+    <color name="text_secondary_dark">#7E8AA8</color>
+    <color name="gauge_track_dark">#1C2740</color>
+
+    <!-- AMOLED (true black) -->
+    <color name="bg_amoled">#000000</color>
+    <color name="card_amoled">#0A0A0A</color>
+    <color name="text_primary_amoled">#E8ECF7</color>
+    <color name="text_secondary_amoled">#7E8AA8</color>
+    <color name="gauge_track_amoled">#151515</color>
+
+    <!-- Light -->
+    <color name="bg_light">#F4F6FB</color>
+    <color name="card_light">#FFFFFF</color>
+    <color name="text_primary_light">#101525</color>
+    <color name="text_secondary_light">#5B6478</color>
+    <color name="gauge_track_light">#E2E6F0</color>
+
+    <!-- Shared accents -->
+    <color name="accent_blue">#3EA6FF</color>
+    <color name="accent_purple">#8C6CFF</color>
+    <color name="accent_green">#3DDC97</color>
+    <color name="text_primary">#E8ECF7</color>
+    <color name="text_secondary">#7E8AA8</color>
+    <color name="danger_red">#FF5C6C</color>
+    <color name="warning_amber">#FFB020</color>
+
+    <!-- Translucent tints used for badges, warning banner, and ripples -->
+    <color name="warning_surface">#26FFB020</color>
+    <color name="essential_pill_bg">#26FF5C6C</color>
+    <color name="system_pill_bg">#1F7E8AA8</color>
+    <color name="ripple_tint">#333EA6FF</color>
+    <color name="ripple_tint_danger">#33FF5C6C</color>
+
+    <!-- Compatibility colors kept from the default project template -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="black">#FF000000</color>
+    <color name="teal_200">#FF03DAC5</color>
+</resources>

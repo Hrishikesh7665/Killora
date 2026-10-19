@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default (phones). Overridden for small-width and tablet-width screens below so the
+         same layouts breathe correctly from compact phones up to tablets. -->
+    <dimen name="screen_padding">18dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_spacing">12dp</dimen>
+    <dimen name="ram_gauge_size">104dp</dimen>
+    <dimen name="header_title_size">23sp</dimen>
+    <dimen name="body_text_size">14sp</dimen>
+</resources>

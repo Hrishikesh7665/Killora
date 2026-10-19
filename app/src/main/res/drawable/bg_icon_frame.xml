@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Subtle neutral backdrop behind each app icon in the list rows, so icons of very
+     different shapes/colors (adaptive icons, legacy square icons, monochrome icons) all sit
+     on a consistent, slightly raised-looking chip instead of floating directly on the card. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="?attr/gaugeTrack"/>
+    <stroke android:width="1dp" android:color="@color/ripple_tint"/>
+</shape>

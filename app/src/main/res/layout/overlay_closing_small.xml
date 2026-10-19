@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Manual mode's overlay: a small, wrap-content card pinned to a screen corner (positioned by
+     OverlayService.overlayLayoutParams, not by this layout) instead of the full-screen card used
+     in automatic mode. The real App info screen stays visible and usable underneath - this only
+     reports progress and offers Hide/Stop, which is why there is no Pause control here: manual
+     mode never acts on its own, so there is nothing of its own to pause.
+
+     Styling note: see overlay_closing.xml - only Widget.MaterialComponents.* styles are safe here. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_overlay_card"
+    android:elevation="6dp"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgCurrentAppIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        android:contentDescription="@null"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvCurrentApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:text=""
+                android:textColor="@color/accent_blue"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/tvProgressCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text=""
+                android:textColor="?attr/textSecondary"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvCurrentPackage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="150dp"
+            android:text=""
+            android:textColor="?attr/textSecondary"
+            android:textSize="10sp"
+            android:maxLines="1"
+            android:ellipsize="middle"/>
+
+        <ProgressBar
+            android:id="@+id/progressLinear"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="150dp"
+            android:layout_height="5dp"
+            android:layout_marginTop="5dp"
+            android:progressTint="@color/accent_blue"
+            android:progressBackgroundTint="?attr/gaugeTrack"
+            android:max="100"/>
+
+        <TextView
+            android:id="@+id/tvStatusHint"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/closing_hint_manual"
+            android:textColor="?attr/textSecondary"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnHideOverlay"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="4dp"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_visibility_off"
+        android:tint="?attr/textSecondary"
+        android:contentDescription="@string/closing_hide"/>
+
+    <ImageButton
+        android:id="@+id/btnStop"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_force_stop"
+        android:tint="@color/danger_red"
+        android:contentDescription="@string/closing_stop"/>
+
+</LinearLayout>

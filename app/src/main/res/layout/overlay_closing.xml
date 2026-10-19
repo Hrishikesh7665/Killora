@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A complete, edge-to-edge "Closing apps" screen shown while Force stop is tapped in the
+     background Settings automation, so the user only ever sees this - never the real Settings
+     UI or the automated tap itself. Solid (not just dimmed) so it fully hides what's underneath.
+     Hidden via the Hide button (this session only) or the "Closing progress card" Settings
+     toggle (Prefs.getShowOverlay); progress keeps reporting through the notification either way.
+
+     Styling note: the app themes extend Theme.MaterialComponents, so only
+     Widget.MaterialComponents.* styles may be used here. Widget.Material3.* styles need
+     Material 3 theme attributes that these themes do not define, which makes every button
+     inflate with a "Failed to inflate ColorStateList" error. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/overlayRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/appBg"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginBottom="18dp"
+            android:src="@drawable/ic_force_stop"
+            android:tint="@color/danger_red"
+            android:contentDescription="@null"/>
+
+        <FrameLayout
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginBottom="20dp">
+
+            <in.hrishikesh7665.killora.RamGaugeView
+                android:id="@+id/progressRing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/tvPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/main_0"
+                android:textColor="?attr/textPrimary"
+                android:textSize="22sp"
+                android:textStyle="bold"/>
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/closing_title"
+            android:textColor="?attr/textPrimary"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tvProgressCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text=""
+            android:textColor="?attr/textSecondary"
+            android:textSize="12sp"/>
+
+        <ProgressBar
+            android:id="@+id/progressLinear"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_marginTop="18dp"
+            android:progressTint="@color/accent_blue"
+            android:progressBackgroundTint="?attr/gaugeTrack"
+            android:max="100"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/bg_card"
+            android:elevation="2dp"
+            android:padding="14dp">
+
+            <ImageView
+                android:id="@+id/imgCurrentAppIcon"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:layout_marginEnd="12dp"
+                android:visibility="gone"
+                android:contentDescription="@null"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvCurrentApp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/accent_blue"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <!-- Shown right under the app name, not just on demand, so it is always clear
+                     exactly which package is being force-stopped. -->
+                <TextView
+                    android:id="@+id/tvCurrentPackage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="?attr/textSecondary"
+                    android:textSize="12sp"
+                    android:maxLines="1"
+                    android:ellipsize="middle"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvStatusHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/closing_hint_wait"
+            android:textColor="?attr/textSecondary"
+            android:textSize="12sp"/>
+
+        <!-- Icon-only controls: a label row underneath repeats each action in text so the
+             buttons stay accessible without relying on content descriptions alone. -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnPauseResume"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:padding="14dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_pause"
+                    android:tint="@color/accent_blue"
+                    android:contentDescription="@string/closing_action_pause_cd"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/closing_action_pause_cd"
+                    android:textColor="?attr/textSecondary"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnHideOverlay"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:padding="14dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_visibility_off"
+                    android:tint="@color/accent_blue"
+                    android:contentDescription="@string/closing_hide"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/closing_hide"
+                    android:textColor="?attr/textSecondary"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/btnStop"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:padding="14dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_force_stop"
+                    android:tint="@color/danger_red"
+                    android:contentDescription="@string/closing_stop"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/closing_stop"
+                    android:textColor="@color/danger_red"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

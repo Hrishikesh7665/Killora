@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Body of the "Add apps to Quick List" dialog: a search box above a multi-select app list. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="8dp">
+
+    <EditText
+        android:id="@+id/etSearchApps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/quick_search_hint"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textColor="?attr/textPrimary"
+        android:textColorHint="?attr/textSecondary"
+        android:textSize="14sp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop="8dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerPickApps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tvPickEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/quick_pick_no_results"
+            android:textColor="?attr/textSecondary"
+            android:textSize="13sp"
+            android:visibility="gone"/>
+    </FrameLayout>
+</LinearLayout>

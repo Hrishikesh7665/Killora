@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Text color for the segmented tabs: white on the filled/active tab for contrast,
+     the theme's secondary text color on the inactive tab. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@android:color/white" android:state_checked="true"/>
+    <item android:color="?attr/textSecondary" android:state_checked="false"/>
+</selector>
