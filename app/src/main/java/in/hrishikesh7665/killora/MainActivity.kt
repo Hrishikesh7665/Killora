@@ -3,6 +3,7 @@ package `in`.hrishikesh7665.killora
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -11,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.net.Uri
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,8 +22,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -33,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
+import kotlin.math.min
 
 /**
  * Home screen: lists installed apps and the user's Quick List, and drives closing the
@@ -63,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     /** Packages saved in the Quick List, used for the pin badge in the main list. */
     private var quickPackageSet: Set<String> = emptySet()
 
-    private var currentSection = Section.APPS
+    private var currentSection = HomeTab.APPS
 
     /** Packages the user has ticked in the main app list. Kept separate from [AppInfo.selected]
      *  so a selection survives list rebuilds (pull-to-refresh, the auto-refresh timer, coming
@@ -94,8 +100,6 @@ class MainActivity : AppCompatActivity() {
      *  (e.g. root access was fixed but Accessibility is now the thing missing). */
     private var dismissedPermissionWarning: String? = null
 
-    private enum class Section { APPS, QUICK_LIST }
-
     /** Set right before we send the user to Settings (Accessibility or "display over other
      *  apps") so the deep force-stop they asked for actually resumes when they come back,
      *  instead of silently doing nothing. Cleared once it either resumes or the user picks a
@@ -119,12 +123,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         ThemeManager.apply(this)
         setContentView(R.layout.activity_main)
+        EdgeToEdge.setUp(this, findViewById(R.id.mainRoot), R.dimen.content_max_width)
+        // Rotating, switching theme or language recreates this screen. Put back what the user
+        // was in the middle of (tab, ticks, open search boxes) instead of starting over.
+        if (savedInstanceState != null) restoreScreenState(savedInstanceState)
 
         showSystem = Prefs.getShowSystem(this)
         showEssential = Prefs.getShowEssential(this)
 
         recycler = findViewById(R.id.recyclerApps)
-        recycler.layoutManager = LinearLayoutManager(this)
+        EdgeToEdge.configureList(recycler)
         adapter = AppListAdapter(
             isInQuickList = { it in quickPackageSet },
             onOpenSettings = { app -> openAppInfo(app.packageName) },
@@ -150,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         // Quick List is now its own full-width, full-height section (see setSection()) rather
         // than a horizontal strip squeezed under the RAM card, so it gets a normal vertical list.
         quickRecycler = findViewById(R.id.recyclerQuickList)
-        quickRecycler.layoutManager = LinearLayoutManager(this)
+        EdgeToEdge.configureList(quickRecycler)
         quickAdapter = QuickListAdapter(
             onRemove = { entry -> onRemoveFromQuickList(entry) },
             onOpenSettings = { entry -> openAppInfo(entry.packageName) },
@@ -162,9 +170,15 @@ class MainActivity : AppCompatActivity() {
         )
         quickRecycler.adapter = quickAdapter
 
-        findViewById<View>(R.id.btnTabApps).setOnClickListener { setSection(Section.APPS) }
-        findViewById<View>(R.id.btnTabQuickList).setOnClickListener { setSection(Section.QUICK_LIST) }
-        setSection(Section.APPS)
+        findViewById<View>(R.id.btnTabApps).setOnClickListener { setSection(HomeTab.APPS) }
+        findViewById<View>(R.id.btnTabQuickList).setOnClickListener { setSection(HomeTab.QUICK_LIST) }
+        // A fresh start opens the tab chosen in Settings (All apps unless changed). A screen
+        // that is only being recreated keeps the tab it was on.
+        setSection(
+            savedInstanceState?.getString(STATE_SECTION)
+                ?.let { saved -> HomeTab.entries.firstOrNull { it.name == saved } }
+                ?: Prefs.getDefaultTab(this)
+        )
 
         findViewById<ImageButton>(R.id.btnRefreshApps).setOnClickListener {
             loadApps()
@@ -191,6 +205,14 @@ class MainActivity : AppCompatActivity() {
                 applyQuickListFilter()
             }
         )
+
+        if (savedInstanceState?.getBoolean(STATE_APPS_SEARCH_OPEN) == true) {
+            findViewById<View>(R.id.rowAppSearch).isVisible = true
+        }
+        if (savedInstanceState?.getBoolean(STATE_QUICK_SEARCH_OPEN) == true) {
+            findViewById<View>(R.id.rowQuickSearch).isVisible = true
+        }
+        findViewById<ImageButton>(R.id.btnQuickMore).setOnClickListener { showQuickListMenu(it) }
 
         quickShowStopped = Prefs.getQuickListShowStopped(this)
         findViewById<SwitchMaterial>(R.id.switchQuickShowStopped).apply {
@@ -265,6 +287,27 @@ class MainActivity : AppCompatActivity() {
         updateRamStats()
         requestNotificationPermissionIfNeeded()
         if (savedInstanceState == null) handleManualHandOff(intent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_SECTION, currentSection.name)
+        outState.putStringArrayList(STATE_SELECTED_APPS, ArrayList(selectedPackages))
+        outState.putStringArrayList(STATE_SELECTED_QUICK, ArrayList(quickSelectedPackages))
+        outState.putBoolean(STATE_APPS_SEARCH_OPEN, findViewById<View>(R.id.rowAppSearch).isVisible)
+        outState.putBoolean(STATE_QUICK_SEARCH_OPEN, findViewById<View>(R.id.rowQuickSearch).isVisible)
+        outState.putBoolean(STATE_ESSENTIAL_DISMISSED, essentialBannerDismissed)
+        outState.putString(STATE_DISMISSED_PERMISSION, dismissedPermissionWarning)
+    }
+
+    /** Restores the plain fields saved by [onSaveInstanceState]. The tab and the search boxes
+     *  are restored where onCreate wires them up. The typed search text itself is restored by
+     *  Android, and the list filters pick it up through the existing text watchers. */
+    private fun restoreScreenState(state: Bundle) {
+        state.getStringArrayList(STATE_SELECTED_APPS)?.let { selectedPackages.addAll(it) }
+        state.getStringArrayList(STATE_SELECTED_QUICK)?.let { quickSelectedPackages.addAll(it) }
+        essentialBannerDismissed = state.getBoolean(STATE_ESSENTIAL_DISMISSED)
+        dismissedPermissionWarning = state.getString(STATE_DISMISSED_PERMISSION)
     }
 
     /** So the closing-progress notification (and, by extension, the live progress it shows
@@ -420,9 +463,9 @@ class MainActivity : AppCompatActivity() {
      *  and the Quick List card on the same screen, which is what made the main screen feel
      *  cluttered. Switching is driven by the two tab buttons (or anything else that calls
      *  this, e.g. after saving a Quick List). */
-    private fun setSection(section: Section) {
+    private fun setSection(section: HomeTab) {
         currentSection = section
-        val showApps = section == Section.APPS
+        val showApps = section == HomeTab.APPS
         findViewById<View>(R.id.sectionApps).isVisible = showApps
         findViewById<View>(R.id.sectionQuickList).isVisible = !showApps
 
@@ -775,10 +818,10 @@ class MainActivity : AppCompatActivity() {
                 resources.getQuantityString(R.plurals.quick_added, result.added, result.added)
             else -> getString(R.string.quick_added_some, result.added, result.alreadyPresent)
         }
-        if (currentSection == Section.APPS) {
+        if (currentSection == HomeTab.APPS) {
             // Offer a jump to the list instead of silently leaving the user on the Apps tab.
             Notice.show(this, message, actionLabel = getString(R.string.quick_view)) {
-                setSection(Section.QUICK_LIST)
+                setSection(HomeTab.QUICK_LIST)
             }
         } else {
             Notice.show(this, message)
@@ -812,6 +855,140 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    // ---------- Quick List import / export ----------
+
+    private val exportLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val uri = result.data?.data
+            if (result.resultCode == RESULT_OK && uri != null) writeQuickListExport(uri)
+        }
+
+    private val importLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val uri = result.data?.data
+            if (result.resultCode == RESULT_OK && uri != null) readQuickListImport(uri)
+        }
+
+    private fun showQuickListMenu(anchor: View) {
+        PopupMenu(this, anchor).apply {
+            menu.add(0, MENU_EXPORT, 0, R.string.quick_menu_export)
+            menu.add(0, MENU_IMPORT, 1, R.string.quick_menu_import)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    MENU_EXPORT -> startQuickListExport()
+                    MENU_IMPORT -> startQuickListImport()
+                }
+                true
+            }
+            show()
+        }
+    }
+
+    /** Opens the system "save as" screen. Nothing is written until the user picks a place. */
+    private fun startQuickListExport() {
+        if (QuickList.load(this).isEmpty()) {
+            Notice.show(this, getString(R.string.quick_export_empty))
+            return
+        }
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = QuickListBackup.MIME_TYPE
+            putExtra(Intent.EXTRA_TITLE, QuickListBackup.suggestedFileName())
+        }
+        launchFilePicker(exportLauncher, intent)
+    }
+
+    private fun writeQuickListExport(uri: Uri) {
+        // Labels are only a courtesy for whoever opens the file; apps that are no longer
+        // installed have no label of their own, so they are saved by package name alone.
+        val labels = quickEntries.filter { it.installed }.associate { it.packageName to it.label }
+        val entries = QuickList.load(this).map { QuickListBackup.Entry(it, labels[it]) }
+        val json = QuickListBackup.toJson(entries)
+        val resolver = contentResolver
+        Background.io {
+            val saved = QuickListBackup.write(resolver, uri, json)
+            Background.main {
+                if (isFinishing || isDestroyed) return@main
+                if (saved) {
+                    Notice.show(
+                        this,
+                        resources.getQuantityString(R.plurals.quick_export_done, entries.size, entries.size)
+                    )
+                } else {
+                    Notice.show(this, getString(R.string.quick_export_failed), persistent = true)
+                }
+            }
+        }
+    }
+
+    private fun startQuickListImport() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_MIME_TYPES, QuickListBackup.IMPORT_MIME_TYPES)
+        }
+        launchFilePicker(importLauncher, intent)
+    }
+
+    private fun launchFilePicker(launcher: ActivityResultLauncher<Intent>, intent: Intent) {
+        try {
+            launcher.launch(intent)
+        } catch (_: ActivityNotFoundException) {
+            Notice.show(this, getString(R.string.quick_file_picker_missing), persistent = true)
+        }
+    }
+
+    private fun readQuickListImport(uri: Uri) {
+        val resolver = contentResolver
+        val ownPackage = packageName
+        Background.io {
+            val text = QuickListBackup.read(resolver, uri)
+            val parsed = text?.let { QuickListBackup.parse(it, ownPackage) }
+            Background.main {
+                if (isFinishing || isDestroyed) return@main
+                when (parsed) {
+                    null -> Notice.show(this, getString(R.string.quick_import_failed_read), persistent = true)
+                    is QuickListBackup.ParseResult.NotAQuickList ->
+                        Notice.show(this, getString(R.string.quick_import_bad_file), persistent = true)
+                    is QuickListBackup.ParseResult.Success ->
+                        if (parsed.packages.isEmpty()) {
+                            Notice.show(this, getString(R.string.quick_import_nothing))
+                        } else {
+                            importIntoQuickList(parsed.packages, parsed.invalid)
+                        }
+                }
+            }
+        }
+    }
+
+    /** Merges an imported list into the saved one. Like every other way of adding apps, it only
+     *  ever adds: nothing saved is replaced or reordered. Apps that are not installed on this
+     *  phone are kept too, so restoring a backup onto a new phone works before the apps are
+     *  reinstalled. Undo puts the list back exactly as it was. */
+    private fun importIntoQuickList(packages: List<String>, invalid: Int) {
+        val before = QuickList.load(this)
+        val result = QuickList.add(this, packages)
+        loadQuickList()
+        var message = when {
+            result.added == 0 -> getString(R.string.quick_import_already_all)
+            result.alreadyPresent == 0 ->
+                resources.getQuantityString(R.plurals.quick_imported, result.added, result.added)
+            else -> getString(R.string.quick_imported_some, result.added, result.alreadyPresent)
+        }
+        if (invalid > 0) {
+            message += getString(R.string.close_summary_separator) +
+                resources.getQuantityString(R.plurals.quick_import_invalid, invalid, invalid)
+        }
+        if (result.added == 0) {
+            Notice.show(this, message)
+        } else {
+            Notice.show(this, message, actionLabel = getString(R.string.quick_undo)) {
+                QuickList.replaceAll(this, before)
+                loadQuickList()
+            }
+        }
+    }
+
     /**
      * Searchable multi-select picker for apps that are not in the Quick List yet. It draws from
      * the same list as the "All apps" tab, so the "Show system apps" settings apply here too.
@@ -834,6 +1011,14 @@ class MainActivity : AppCompatActivity() {
         val emptyView = content.findViewById<View>(R.id.tvPickEmpty)
         val search = content.findViewById<EditText>(R.id.etSearchApps)
         val chosen = mutableSetOf<String>()
+
+        // The list has a comfortable fixed height, but never more than 40% of the window, so the
+        // dialog still fits (with its buttons) in landscape, split-screen and small windows.
+        val density = resources.displayMetrics.density
+        val listFrame = content.findViewById<View>(R.id.pickListFrame)
+        val maxListHeight = (resources.configuration.screenHeightDp * density * 0.4f).toInt()
+            .coerceAtLeast((120 * density).toInt())
+        listFrame.layoutParams = listFrame.layoutParams.apply { height = min(height, maxListHeight) }
 
         lateinit var dialog: AlertDialog
         fun refreshConfirmButton() {
@@ -1040,7 +1225,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun promptBatteryException(packages: List<String>) {
         Prefs.setBatteryPromptShown(this, true)
-        val skin = OemAutostartHelper.skinName()
+        val skin = OemAutostartHelper.skinName(this)
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.battery_dialog_title, skin))
             .setMessage(getString(R.string.battery_dialog_message, skin))
@@ -1077,6 +1262,20 @@ class MainActivity : AppCompatActivity() {
             HapticFeedbackConstants.VIRTUAL_KEY,
             HapticFeedbackConstants.FLAG_IGNORE_VIEW_SETTING
         )
+    }
+
+    private companion object {
+        const val MENU_EXPORT = 1
+        const val MENU_IMPORT = 2
+
+        // Keys for what survives the screen being recreated (rotation, theme or language change).
+        const val STATE_SECTION = "state_section"
+        const val STATE_SELECTED_APPS = "state_selected_apps"
+        const val STATE_SELECTED_QUICK = "state_selected_quick"
+        const val STATE_APPS_SEARCH_OPEN = "state_apps_search_open"
+        const val STATE_QUICK_SEARCH_OPEN = "state_quick_search_open"
+        const val STATE_ESSENTIAL_DISMISSED = "state_essential_dismissed"
+        const val STATE_DISMISSED_PERMISSION = "state_dismissed_permission"
     }
 
 }

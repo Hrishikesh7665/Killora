@@ -103,8 +103,9 @@ object OemAutostartHelper {
     )
 
     /** Short, human-readable name of the current OEM skin, for display text. Unlisted brands
-     *  fall back to the raw manufacturer name. */
-    fun skinName(): String {
+     *  fall back to the raw manufacturer name. The skin names are brand names and stay as they
+     *  are in every language; only the last-resort fallback is a translated string. */
+    fun skinName(context: Context): String {
         return when (normalizedManufacturer()) {
             "xiaomi", "redmi", "poco" -> "MIUI / HyperOS"
             "oppo", "realme", "oneplus" -> "ColorOS / realme UI / OxygenOS"
@@ -112,7 +113,7 @@ object OemAutostartHelper {
             "samsung" -> "One UI"
             "huawei" -> "EMUI"
             "honor" -> "MagicOS"
-            else -> Build.MANUFACTURER?.replaceFirstChar { it.uppercase() } ?: "your device"
+            else -> Build.MANUFACTURER?.replaceFirstChar { it.uppercase() } ?: context.getString(R.string.oem_fallback_device_name)
         }
     }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Languages Killora can be switched to. Android 13+ lists these under system Settings ›
+     Apps › Killora › Language. Keep in sync with AppLanguage.supportedTags and the
+     res/values-<code>/ folders. -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="en"/>
+</locale-config>

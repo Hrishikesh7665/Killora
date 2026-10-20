@@ -8,4 +8,20 @@
     <dimen name="ram_gauge_size">104dp</dimen>
     <dimen name="header_title_size">23sp</dimen>
     <dimen name="body_text_size">14sp</dimen>
+
+    <!-- Widest the main content may get; on a bigger window it stays this wide and centered.
+         Landscape is wider (see values-land) because its two panes sit side by side. -->
+    <dimen name="content_max_width">840dp</dimen>
+    <!-- Settings is a plain column of cards, which reads best narrow even on a tablet. -->
+    <dimen name="content_max_width_narrow">640dp</dimen>
+    <!-- Landscape: width of the left pane (RAM, toggles, action buttons). -->
+    <dimen name="land_pane_width">270dp</dimen>
+    <!-- Gap between the columns of the app lists on wide windows. -->
+    <dimen name="list_column_gap">12dp</dimen>
+
+    <!-- Full-screen closing overlay. -->
+    <dimen name="overlay_max_width">480dp</dimen>
+    <dimen name="overlay_ring_size">128dp</dimen>
+    <dimen name="overlay_gap_large">22dp</dimen>
+    <dimen name="overlay_gap_medium">18dp</dimen>
 </resources>

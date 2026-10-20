@@ -2,6 +2,10 @@ plugins {
     id("com.android.application")
 }
 
+// Version number and build number live in gradle.properties (APP_VERSION_NAME / APP_VERSION_CODE).
+val appVersionName: String = providers.gradleProperty("APP_VERSION_NAME").get()
+val appVersionCode: Int = providers.gradleProperty("APP_VERSION_CODE").get().toInt()
+
 android {
     namespace = "in.hrishikesh7665.killora"
     compileSdk = 37
@@ -12,8 +16,8 @@ android {
         // Keep in step with compileSdk: shipping behind the latest platform means every device
         // on that newer OS silently applies compatibility behavior instead of this app's own.
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        versionName = appVersionName
     }
 
     buildTypes {

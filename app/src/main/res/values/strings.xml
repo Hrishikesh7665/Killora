@@ -164,9 +164,9 @@
     <string name="main_settings_cd">Settings</string>
     <string name="main_all_apps">All apps</string>
     <string name="main_quick_list">Quick List</string>
-    <string name="main_0">0%</string>
-    <string name="main_0_gb_free">0 GB free</string>
-    <string name="main_0_apps_running">0 apps running</string>
+    <string name="main_0" translatable="false">0%</string>
+    <string name="main_0_gb_free" translatable="false">0 GB free</string>
+    <string name="main_0_apps_running" translatable="false">0 apps running</string>
     <string name="main_refresh_app_list_cd">Refresh app list</string>
     <string name="main_preparing_your_apps">Preparing app list…</string>
     <string name="main_scanning_installed_apps_and_checking">Scanning installed apps and checking what\'s running</string>
@@ -180,7 +180,7 @@
     <string name="settings_show_essential_system_apps">Show essential system apps</string>
     <string name="settings_core_android_processes_system_ui">Core Android processes (System UI, telephony, keyboard, Play services, launcher). Force-stopping one can freeze the UI or require a restart.</string>
     <string name="settings_follow_system">Follow system</string>
-    <string name="settings_u203a">\u203A</string>
+    <string name="settings_u203a" translatable="false">\u203A</string>
     <string name="settings_home_screen_shortcut">Home screen shortcut</string>
     <string name="settings_pins_a_onetap_icon_that">Pins a one-tap icon that closes your Quick List instantly, without opening the app.</string>
     <string name="settings_pin_quickclose_shortcut">Pin Quick-Close shortcut</string>
@@ -201,7 +201,40 @@
     <string name="quick_item_remove_from_quick_list_cd">Remove from Quick List</string>
     <string name="closing_hide">Hide</string>
     <string name="closing_stop">Stop</string>
-    <string name="widget_text">--%</string>
+    <string name="widget_text" translatable="false">--%</string>
     <string name="widget_ram_used_u00b7_tap_to">RAM used \u00b7 tap to refresh</string>
     <string name="widget_close_all">CLOSE ALL</string>
+
+    <!-- Quick List: import and export -->
+    <string name="quick_more_cd">More Quick List options</string>
+    <string name="quick_menu_export">Export Quick List</string>
+    <string name="quick_menu_import">Import Quick List</string>
+    <string name="quick_export_empty">Your Quick List is empty, so there is nothing to export</string>
+    <plurals name="quick_export_done">
+        <item quantity="one">Exported %d app</item>
+        <item quantity="other">Exported %d apps</item>
+    </plurals>
+    <string name="quick_export_failed">Couldn\'t save the file</string>
+    <string name="quick_file_picker_missing">This device has no app that can pick files</string>
+    <string name="quick_import_failed_read">Couldn\'t read that file</string>
+    <string name="quick_import_bad_file">That file isn\'t a Quick List export</string>
+    <string name="quick_import_nothing">No apps found in that file</string>
+    <string name="quick_import_already_all">Everything in that file is already in your Quick List</string>
+    <plurals name="quick_imported">
+        <item quantity="one">Imported %d app into your Quick List</item>
+        <item quantity="other">Imported %d apps into your Quick List</item>
+    </plurals>
+    <string name="quick_imported_some">Imported %1$d · %2$d already in your Quick List</string>
+    <plurals name="quick_import_invalid">
+        <item quantity="one">%d invalid entry skipped</item>
+        <item quantity="other">%d invalid entries skipped</item>
+    </plurals>
+
+    <!-- Settings: default tab and language -->
+    <string name="settings_default_tab">Default tab</string>
+    <string name="settings_language">Language</string>
+    <string name="language_system_default">System default</string>
+
+    <!-- Last-resort name used in "One more step for %s" when the phone brand is not recognised -->
+    <string name="oem_fallback_device_name">your device</string>
 </resources>

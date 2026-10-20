@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Columns in the app lists. One on a phone. The other folders in this family
+     (values-w720dp, values-w720dp-land, values-w1100dp-land) widen it when the list is
+     wide enough for two cards side by side. -->
+<resources>
+    <integer name="list_columns">1</integer>
+</resources>

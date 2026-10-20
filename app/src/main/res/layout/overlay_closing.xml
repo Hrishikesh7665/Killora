@@ -18,28 +18,38 @@
     android:clickable="true"
     android:focusable="true">
 
+    <!-- Scrolls, so on a short (landscape) screen nothing, in particular the Stop button, is
+         ever pushed off the bottom. fillViewport + gravity keep it centered when it fits. -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:overScrollMode="ifContentScrolls">
+
     <LinearLayout
+        android:id="@+id/overlayContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:padding="8dp">
+        android:gravity="center"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
 
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginBottom="@dimen/overlay_gap_medium"
             android:src="@drawable/ic_force_stop"
             android:tint="@color/danger_red"
             android:contentDescription="@null"/>
 
         <FrameLayout
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_marginBottom="20dp">
+            android:layout_width="@dimen/overlay_ring_size"
+            android:layout_height="@dimen/overlay_ring_size"
+            android:layout_marginBottom="@dimen/overlay_gap_medium">
 
             <in.hrishikesh7665.killora.RamGaugeView
                 android:id="@+id/progressRing"
@@ -79,7 +89,7 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="@dimen/overlay_gap_medium"
             android:progressTint="@color/accent_blue"
             android:progressBackgroundTint="?attr/gaugeTrack"
             android:max="100"/>
@@ -87,7 +97,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="@dimen/overlay_gap_large"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:background="@drawable/bg_card"
@@ -147,7 +157,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
+            android:layout_marginTop="@dimen/overlay_gap_large"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -226,4 +236,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    </ScrollView>
 </FrameLayout>

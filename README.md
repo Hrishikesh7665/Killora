@@ -15,8 +15,14 @@ Depending on your device and available privileges, Killora offers three ways to 
 - **App Management:** Scan installed apps and select which ones to close, with options to filter system apps and essential apps.
 - **Quick List:** Keep your frequently closed apps in one convenient, persistent list.
 - **RAM Usage Widget:** Check memory usage directly from your home screen.
+- **Quick List backup:** Export your Quick List to a JSON file and import it again (Quick List tab, ⋮ menu). Importing only adds apps, and can be undone.
+- **Default tab:** Choose whether Killora opens on All apps or Quick List (Settings).
+- **Language:** Pick the app language in Settings. Only English ships today; see below to add more.
+- **Responsive layout:** Phones, tablets and foldables in either orientation, including a two-pane landscape layout.
 - **Theme Customization:** Choose Light, Dark, or AMOLED mode, or follow your system's theme.
 - **One-Tap Actions:** Close your Quick List using a home-screen shortcut or widget.
+
+See the [changelog](CHANGELOG.md) for the full release history, or jump directly to the [v1.1.0 release notes](CHANGELOG.md#v110).
 
 ## Project Structure
 
@@ -33,6 +39,9 @@ app/src/main/java/in/hrishikesh7665/killora/
 ├── ManualCloser.kt
 ├── RootUtils.kt
 ├── OemAutostartHelper.kt
+├── QuickList.kt / QuickListBackup.kt
+├── AppLanguage.kt
+├── EdgeToEdge.kt
 └── ...
 ```
 
@@ -46,6 +55,19 @@ app/src/main/java/in/hrishikesh7665/killora/
 | `AppCloser.kt` / `ManualCloser.kt` | Coordinates automatic and manual closing workflows |
 | `RootUtils.kt` | Detects root availability and handles root commands |
 | `OemAutostartHelper.kt` | Provides links to OEM-specific autostart and battery settings |
+| `QuickList.kt` / `QuickListBackup.kt` | Saved Quick List, and its JSON import and export |
+| `AppLanguage.kt` | In-app language choice and the list of supported languages |
+| `EdgeToEdge.kt` | Window insets, maximum content width and list columns for any screen size |
+| `HomeTab.kt` | The two main tabs; also the values of the Default tab setting |
+
+## Adding a language
+
+All user-facing text lives in `app/src/main/res/values/strings.xml`.
+
+1. Copy it to `res/values-<code>/strings.xml` (for example `values-de`) and translate it. Leave strings marked `translatable="false"` out.
+2. Add the code to `AppLanguage.supportedTags` and to `res/xml/locales_config.xml`.
+
+The Language row in Settings then lists it automatically.
 
 ## Requirements
 
@@ -76,7 +98,7 @@ The generated debug APK will typically be available under `app/build/outputs/apk
 
 ## Releases
 
-Download the latest version of Killora from the [GitHub Releases](../../releases/latest) page.
+Download the latest version of Killora from the [GitHub Releases](../../releases/latest) page. See the [v1.1.0 release notes](CHANGELOG.md#v110) or browse the [complete changelog](CHANGELOG.md).
 
 ## Permissions and Access
 
@@ -105,7 +127,7 @@ Killora is designed with simplicity and privacy in mind.
 - No network permissions requested.
 - No unnecessary permissions by design.
 
-App discovery and closing operations are intended to run locally on your device.
+App discovery and closing operations are intended to run locally on your device. Quick List import and export use Android's system file picker, so Killora needs no storage permission and only touches the file you choose.
 
 ## License
 

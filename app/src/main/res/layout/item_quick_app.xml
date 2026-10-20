@@ -57,20 +57,21 @@
 
     <ImageButton
         android:id="@+id/btnQuickSettings"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:padding="7dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="9dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_settings_gear"
         android:contentDescription="@string/app_item_open_app_settings_cd"/>
 
     <ImageButton
         android:id="@+id/btnQuickRemove"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:padding="8dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_close_small"
+        android:tint="?attr/textSecondary"
         android:contentDescription="@string/quick_item_remove_from_quick_list_cd"/>
 
     <com.google.android.material.checkbox.MaterialCheckBox

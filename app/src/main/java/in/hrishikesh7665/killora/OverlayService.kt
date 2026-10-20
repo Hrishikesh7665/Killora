@@ -238,6 +238,13 @@ class OverlayService : Service() {
             return
         }
 
+        // Keeps the full-screen card clear of notches and system bars and stops it stretching
+        // across a tablet. Only the full-screen layout has this view; the manual-mode card
+        // does not, hence the null check.
+        view.findViewById<View>(R.id.overlayContent)?.let {
+            EdgeToEdge.padForInsets(it, R.dimen.overlay_max_width)
+        }
+
         val params = overlayLayoutParams()
         view.findViewById<View>(R.id.btnStop).setOnClickListener {
             ForceCloseAccessibilityService.cancel()

@@ -17,17 +17,23 @@ import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 
-/** App preferences: theme, close behaviour (manual vs automatic, progress overlay), and
- *  permission/status shortcuts (root, Accessibility Service, home-screen widget shortcut). */
+/** App preferences: theme, default tab, language, close behaviour (manual vs automatic,
+ *  progress overlay), and permission/status shortcuts (root, Accessibility Service,
+ *  home-screen widget shortcut). */
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeManager.apply(this)
         setContentView(R.layout.activity_settings)
+        EdgeToEdge.setUp(this, findViewById(R.id.settingsContent), R.dimen.content_max_width_narrow)
 
         refreshThemeLabel()
         findViewById<View>(R.id.rowTheme).setOnClickListener { showThemeDialog() }
+        refreshDefaultTabLabel()
+        findViewById<View>(R.id.rowDefaultTab).setOnClickListener { showDefaultTabDialog() }
+        refreshLanguageLabel()
+        findViewById<View>(R.id.rowLanguage).setOnClickListener { showLanguageDialog() }
         findViewById<ImageButton>(R.id.btnBack).setOnClickListener { finish() }
         findViewById<MaterialButton>(R.id.btnPinShortcut).setOnClickListener { pinQuickCloseShortcut() }
         findViewById<MaterialButton>(R.id.btnAddWidget).setOnClickListener { requestAddWidget() }
@@ -159,7 +165,7 @@ class SettingsActivity : AppCompatActivity() {
             return
         }
         card.isVisible = true
-        val skin = OemAutostartHelper.skinName()
+        val skin = OemAutostartHelper.skinName(this)
         findViewById<TextView>(R.id.tvBackgroundReliabilityBody).text =
             getString(R.string.settings_background_body, skin)
 
@@ -199,6 +205,54 @@ class SettingsActivity : AppCompatActivity() {
                 ThemeManager.setMode(this, modes[which])
                 dialog.dismiss()
                 recreate()
+            }
+            .show()
+    }
+
+    private fun refreshDefaultTabLabel() {
+        val label = when (Prefs.getDefaultTab(this)) {
+            HomeTab.APPS -> R.string.main_all_apps
+            HomeTab.QUICK_LIST -> R.string.main_quick_list
+        }
+        findViewById<TextView>(R.id.tvDefaultTabValue).setText(label)
+    }
+
+    /** Which tab the main screen opens on when the app starts. It takes effect the next time
+     *  the app starts, so it never moves the user off the tab they are on right now. */
+    private fun showDefaultTabDialog() {
+        val tabs = arrayOf(HomeTab.APPS, HomeTab.QUICK_LIST)
+        val options = arrayOf(getString(R.string.main_all_apps), getString(R.string.main_quick_list))
+        val current = tabs.indexOf(Prefs.getDefaultTab(this)).coerceAtLeast(0)
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_default_tab)
+            .setSingleChoiceItems(options, current) { dialog, which ->
+                Prefs.setDefaultTab(this, tabs[which])
+                refreshDefaultTabLabel()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun refreshLanguageLabel() {
+        val tag = AppLanguage.selectedTag()
+        findViewById<TextView>(R.id.tvLanguageValue).text =
+            if (tag == null) getString(R.string.language_system_default) else AppLanguage.displayName(tag)
+    }
+
+    /** "System default" plus every language in [AppLanguage.supportedTags]. Choosing one makes
+     *  AppCompat recreate the open screens, so the new language shows straight away. */
+    private fun showLanguageDialog() {
+        val tags = AppLanguage.supportedTags
+        val options = (listOf(getString(R.string.language_system_default)) + tags.map { AppLanguage.displayName(it) })
+            .toTypedArray()
+        val current = AppLanguage.selectedTag()?.let { tags.indexOf(it) + 1 } ?: 0
+        AlertDialog.Builder(this)
+            .setTitle(R.string.settings_language)
+            .setSingleChoiceItems(options, current) { dialog, which ->
+                dialog.dismiss()
+                val tag = if (which == 0) null else tags[which - 1]
+                if (tag != AppLanguage.selectedTag()) AppLanguage.select(tag)
+                refreshLanguageLabel()
             }
             .show()
     }

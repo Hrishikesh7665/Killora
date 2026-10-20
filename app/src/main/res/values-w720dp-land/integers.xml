@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape: the list only has the right-hand pane, so it stays one column here... -->
+<resources>
+    <integer name="list_columns">1</integer>
+</resources>

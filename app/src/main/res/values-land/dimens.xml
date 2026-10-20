@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Landscape: the main screen is two panes side by side, so it may be wider before it is
+     centered. The closing overlay has little height, so its ring and gaps shrink. -->
+<resources>
+    <dimen name="content_max_width">1200dp</dimen>
+    <dimen name="overlay_ring_size">84dp</dimen>
+    <dimen name="overlay_gap_large">10dp</dimen>
+    <dimen name="overlay_gap_medium">8dp</dimen>
+</resources>

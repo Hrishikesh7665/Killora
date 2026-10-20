@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -8,8 +9,7 @@
     android:paddingStart="@dimen/screen_padding"
     android:paddingEnd="@dimen/screen_padding"
     android:paddingTop="@dimen/screen_padding"
-    android:paddingBottom="12dp"
-    android:fitsSystemWindows="true">
+    android:paddingBottom="12dp">
 
     <!-- Header -->
     <LinearLayout
@@ -43,9 +43,9 @@
 
         <ImageButton
             android:id="@+id/btnSettings"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:padding="10dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_settings_gear"
             android:contentDescription="@string/main_settings_cd"/>
@@ -86,10 +86,10 @@
 
         <ImageButton
             android:id="@+id/btnDismissPermissionWarning"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="6dp"
-            android:padding="7dp"
+            android:padding="12dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_close_small"
             android:tint="@color/warning_amber"
@@ -301,10 +301,10 @@
 
                 <ImageButton
                     android:id="@+id/btnDismissEssentialHidden"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginStart="4dp"
-                    android:padding="6dp"
+                    android:padding="12dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_close_small"
                     android:tint="@color/warning_amber"
@@ -332,19 +332,20 @@
 
                 <ImageButton
                     android:id="@+id/btnSearchApps"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginEnd="2dp"
-                    android:padding="5dp"
+                    android:padding="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_search"
+                    android:tint="?attr/textSecondary"
                     android:contentDescription="@string/main_search_cd"/>
 
                 <ImageButton
                     android:id="@+id/btnRefreshApps"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_refresh"
                     android:contentDescription="@string/main_refresh_app_list_cd"/>
@@ -381,11 +382,12 @@
 
                 <ImageButton
                     android:id="@+id/btnCloseAppSearch"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_close_small"
+                    android:tint="?attr/textSecondary"
                     android:contentDescription="@string/notice_dismiss"/>
             </LinearLayout>
 
@@ -492,7 +494,8 @@
                     android:id="@+id/btnSaveQuickList"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
                     android:layout_marginEnd="8dp"
                     android:text="@string/quick_add_selected"
                     android:textSize="12sp"
@@ -506,7 +509,8 @@
                     android:id="@+id/btnCloseSelected"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="52dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
                     android:text="@string/main_close_selected"
                     android:textSize="13sp"
                     android:textAllCaps="false"
@@ -573,12 +577,21 @@
 
                 <ImageButton
                     android:id="@+id/btnSearchQuickList"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_search"
+                    android:tint="?attr/textSecondary"
                     android:contentDescription="@string/quick_list_search_cd"/>
+                <ImageButton
+                    android:id="@+id/btnQuickMore"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_more_vert"
+                    android:contentDescription="@string/quick_more_cd"/>
             </LinearLayout>
 
             <!-- Hidden until the search icon above is tapped. See rowAppSearch for the same
@@ -611,11 +624,12 @@
 
                 <ImageButton
                     android:id="@+id/btnCloseQuickSearch"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_close_small"
+                    android:tint="?attr/textSecondary"
                     android:contentDescription="@string/notice_dismiss"/>
             </LinearLayout>
 
@@ -640,7 +654,8 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
                     android:text="@string/quick_add_apps"
                     android:textSize="13sp"
                     android:textAllCaps="false"
@@ -655,7 +670,8 @@
                     android:id="@+id/btnClearQuickList"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="44dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="44dp"
                     android:layout_marginStart="8dp"
                     android:text="@string/quick_clear_all"
                     android:textSize="13sp"
@@ -730,7 +746,8 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCloseQuickList"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                    android:minHeight="52dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/quick_close_selected"
                 android:textSize="13sp"

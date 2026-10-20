@@ -2,8 +2,11 @@ package `in`.hrishikesh7665.killora
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Handler
+import android.os.LocaleList
 import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
@@ -11,6 +14,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import androidx.core.app.LocaleManagerCompat
 import androidx.core.net.toUri
 
 /**
@@ -87,6 +91,11 @@ class ForceCloseAccessibilityService : AccessibilityService() {
         /** How long to wait for a confirmation dialog before checking the result anyway. */
         private const val CONFIRM_WAIT_MS = 2200L
 
+        /** Until this long after tapping Force stop, a button labelled "Force stop" is not
+         *  accepted as the confirm button unless a Cancel button proves the dialog is up. In the
+         *  first moments the only such button on screen is the App info page's own one. */
+        private const val FORCE_LABEL_CONFIRM_GRACE_MS = 700L
+
         /** Delay between backing out of App info and opening the next package. */
         private const val ADVANCE_DELAY_MS = 450L
 
@@ -135,6 +144,7 @@ class ForceCloseAccessibilityService : AccessibilityService() {
             "Force stop", "Force Stop", "FORCE STOP",
             "Force close", "Force Close", "FORCE CLOSE"
         )
+        private val CANCEL_TEXTS = listOf("Cancel", "CANCEL")
         private val CONFIRM_TEXTS = listOf(
             "OK", "Ok", "Force stop", "Force Stop", "FORCE STOP",
             "Yes", "YES", "Confirm", "CONFIRM"
@@ -573,6 +583,16 @@ class ForceCloseAccessibilityService : AccessibilityService() {
             return
         }
 
+        // No Force stop button, but a confirmation dialog is open (left behind by an earlier tap
+        // that missed it): answer it instead of searching for a button it is covering.
+        if (isConfirmDialogShown(root)) {
+            KLog.d("Confirmation dialog already open, answering it")
+            waitingForConfirm = true
+            waitingForConfirmSince = System.currentTimeMillis()
+            handleConfirmDialog(root, pkg, confirmTexts)
+            return
+        }
+
         KLog.d("Force stop not found (pkg=$settingsPkg label=$dynamicLabel)")
         if (treeDumpCount < MAX_DUMPS_PER_PACKAGE) {
             treeDumpCount++
@@ -638,7 +658,23 @@ class ForceCloseAccessibilityService : AccessibilityService() {
         scrollUp(root)
 
         // Exact match here: a substring search for "OK" also matches words like "Book's Story".
-        val btn = findClickableByTexts(root, confirmTexts, excludeKey = lastClickedNodeKey, exact = true)
+        //
+        // Plain OK / Yes / Confirm buttons come first. A button labelled "Force stop" is also
+        // accepted (some phones label the dialog's button that way), but only once the dialog is
+        // provably up: before that, the only such button is the App info page's own Force stop
+        // button, and tapping it a second time "confirms" nothing while the real dialog then
+        // opens unanswered.
+        val dialogUp = isConfirmDialogShown(root) ||
+            System.currentTimeMillis() - waitingForConfirmSince > FORCE_LABEL_CONFIRM_GRACE_MS
+        val forceLabels = (listOfNotNull(resolveLabel(root.packageName?.toString().orEmpty())) + FORCE_STOP_TEXTS)
+            .map { it.lowercase() }.toSet()
+        val plainConfirmTexts = confirmTexts.filter { it.lowercase() !in forceLabels }
+        val btn = findClickableByTexts(root, plainConfirmTexts, excludeKey = lastClickedNodeKey, exact = true)
+            ?: if (dialogUp) {
+                findClickableByTexts(root, confirmTexts, excludeKey = lastClickedNodeKey, exact = true)
+            } else {
+                null
+            }
         if (btn != null) {
             KLog.d("Clicking confirm button")
             if (clickNode(btn)) {
@@ -653,6 +689,13 @@ class ForceCloseAccessibilityService : AccessibilityService() {
             KLog.d("No confirm dialog, verifying")
             verifyAndAdvance(pkg)
         }
+    }
+
+    /** True when the Force stop confirmation dialog is on screen, recognised by its Cancel
+     *  button. The App info page has none, so this never mistakes the page for the dialog. */
+    private fun isConfirmDialogShown(root: AccessibilityNodeInfo): Boolean {
+        val cancelTexts = listOfNotNull(runCatching { getString(android.R.string.cancel) }.getOrNull()) + CANCEL_TEXTS
+        return findClickableByTexts(root, cancelTexts.distinct(), exact = true) != null
     }
 
     /**
@@ -742,7 +785,7 @@ class ForceCloseAccessibilityService : AccessibilityService() {
         resolvedLabelCache[settingsPkg]?.let { return it }
         if (resolvedLabelCache.containsKey(settingsPkg)) return null
         val resolved = try {
-            val res = packageManager.getResourcesForApplication(settingsPkg)
+            val res = systemLanguageResources(settingsPkg)
             FORCE_STOP_RESOURCE_NAMES.firstNotNullOfOrNull { name ->
                 val id = res.getIdentifier(name, "string", settingsPkg)
                 if (id != 0) res.getText(id).toString().takeIf { it.isNotBlank() } else null
@@ -754,6 +797,23 @@ class ForceCloseAccessibilityService : AccessibilityService() {
         KLog.d("resolveLabel($settingsPkg) = $resolved")
         resolvedLabelCache[settingsPkg] = resolved
         return resolved
+    }
+
+    /**
+     * The Settings app's resources in the *device* language. The Settings screen is always shown
+     * in the system language, so its "Force stop" label has to be looked up in that language too.
+     * A plain getResourcesForApplication() can pick up Killora's own language choice instead (on
+     * Android 13+ a per-app language applies to the whole process), which would look for, say, an
+     * English label on a screen that is in another language and the automation would never find
+     * its button. Whenever the app follows the system language, this returns the same strings
+     * that call did.
+     */
+    private fun systemLanguageResources(settingsPkg: String): Resources {
+        val settingsContext = createPackageContext(settingsPkg, 0)
+        val deviceLocales = LocaleManagerCompat.getSystemLocales(this).toLanguageTags()
+        val config = Configuration(settingsContext.resources.configuration)
+        config.setLocales(LocaleList.forLanguageTags(deviceLocales))
+        return settingsContext.createConfigurationContext(config).resources
     }
 
     private fun findScrollable(node: AccessibilityNodeInfo, depth: Int): AccessibilityNodeInfo? {

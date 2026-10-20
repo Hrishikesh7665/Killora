@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ...until the window is wide enough for that pane to hold two columns. -->
+<resources>
+    <integer name="list_columns">2</integer>
+</resources>

@@ -3,7 +3,7 @@ package `in`.hrishikesh7665.killora
 import android.content.Context
 import androidx.core.content.edit
 
-/** Single SharedPreferences store for every app-level setting: theme, filter toggles, and the
+/** Single SharedPreferences store for every app-level setting: theme, default tab, filter toggles, and the
  *  saved Quick List used by the app, the pinned shortcut and the widget. Use [QuickList] to
  *  change the Quick List rather than writing it here directly. */
 object Prefs {
@@ -18,11 +18,21 @@ object Prefs {
     private const val KEY_MANUAL_MODE = "manual_close_mode"
     private const val KEY_BATTERY_PROMPT_SHOWN = "battery_prompt_shown"
     private const val KEY_QUICK_LIST_SHOW_STOPPED = "quick_list_show_stopped"
+    private const val KEY_DEFAULT_TAB = "default_tab"
 
     private fun sp(context: Context) = context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
     fun getThemeModeName(context: Context): String = sp(context).getString(KEY_THEME, "SYSTEM") ?: "SYSTEM"
     fun setThemeModeName(context: Context, name: String) = sp(context).edit { putString(KEY_THEME, name) }
+
+    /** The tab the main screen opens on when the app starts. All apps unless the user chose
+     *  otherwise, which is how the app behaved before this setting existed. */
+    fun getDefaultTab(context: Context): HomeTab = try {
+        HomeTab.valueOf(sp(context).getString(KEY_DEFAULT_TAB, null) ?: HomeTab.APPS.name)
+    } catch (_: IllegalArgumentException) {
+        HomeTab.APPS
+    }
+    fun setDefaultTab(context: Context, tab: HomeTab) = sp(context).edit { putString(KEY_DEFAULT_TAB, tab.name) }
 
     fun saveQuickList(context: Context, packages: List<String>) =
         sp(context).edit { putString(KEY_QUICK_LIST, packages.joinToString(",")) }
